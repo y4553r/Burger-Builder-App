@@ -24,7 +24,6 @@ class App extends Component {
           {/* <BurgerBuilder />
             <Checkout /> */}
         </Layout>
-        <p hidden>cnrd*1928</p>
       </div>
     );
   }

@@ -28,6 +28,13 @@ export const logout = () => {
   };
 };
 
+export const setAuthRedirectPath = (path) => {
+  return {
+    type: actionTypes.SET_AUTH_REDIRECT_PATH,
+    path: path
+  };
+};
+
 export const checkAuthTimeout = (expirationTime) => {
   return dispatch => {
     setTimeout(()=>{
@@ -49,11 +56,9 @@ export const auth = (email, password, isSignup) => {
     if(!isSignup) {
       url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyBnJF4f7xNBl8m2pqicfVWSmju01FYHUSc';
     }
-    console.log(url);
 
     axios.post(url, authData)
       .then(response => {
-        console.log(response.data);
         dispatch(authSuccess(response.data.idToken, response.data.localId));
         dispatch(checkAuthTimeout(response.data.expiresIn));
       })

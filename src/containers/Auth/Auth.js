@@ -43,6 +43,12 @@ class Auth extends Component {
     isSignup: true
   };
 
+  componentDidMount() {
+    if(!this.props.building && this.props.authRedirectPath!=='/') {
+      this.props.onSetAutoRedirectPath('/');
+    }
+  }
+
   checkValidity(value, rules) {
     let isValid = true;
     if (!rules) {
@@ -112,12 +118,17 @@ class Auth extends Component {
     let errorMessage = null;
     if (this.props.error) errorMessage = <p>{this.props.error.message}</p>;
     
+    let authRedirect = null;
+    if(this.props.token) {
+      authRedirect = <Redirect to={this.props.authRedirectPath} />;
+    }
 
     return (
       <div className={styles.Auth}>
         <div>
           <h1>Login</h1>
           {this.props.loading ? <Spinner /> : form}
+          {authRedirect}
           {errorMessage}
           <Button
             btnType="Danger"
@@ -135,13 +146,16 @@ const mapStateToProps = state => {
     token: state.auth.token,
     userId: state.auth.userId,
     error: state.auth.error,
-    loading: state.auth.loading
+    loading: state.auth.loading,
+    building: state.burgerbuilder.building,
+    authRedirectPath: state.auth.authRedirectPath
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup))
+    onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
+		onSetAutoRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
   };
 };
 

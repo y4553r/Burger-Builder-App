@@ -16,24 +16,39 @@ class App extends Component {
   }
 
   render() {
+    let routes = (
+      <Switch>
+        <Route path='/burger-builder' component={BurgerBuilder} />
+        <Route path='/auth' component={Auth} />
+        <Redirect from='/' to='/burger-builder' />
+      </Switch>
+    );
+    
+    if (this.props.isAuth) {
+      routes = (<Switch>
+        <Route path='/checkout' component={Checkout} />
+        <Route path='/logout' component={Logout} />
+        <Route path='/orders' component={Orders} />
+        <Route path='/burger-builder' component={BurgerBuilder} />
+        <Route path='/auth' component={Auth} />
+        <Redirect from='/' to='/burger-builder' />
+      </Switch>)
+    }
     return (
       <div>
         <Layout>
-          <Switch>
-            <Route path='/checkout' component={Checkout} />
-            <Route path='/burger-builder' component={BurgerBuilder} />
-            <Route path='/orders' component={Orders} />
-            <Route path='/auth' component={Auth} />
-            <Route path='/logout' component={Logout} />
-            <Redirect from='/' to='/burger-builder' />
-          </Switch>
-          {/* <BurgerBuilder />
-            <Checkout /> */}
+          {routes}
         </Layout>
       </div>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    isAuth: state.auth.token !== null
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -41,4 +56,4 @@ const mapDispatchToProps = dispatch => {
   }
 };
 
-export default withRouter(connect(null, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

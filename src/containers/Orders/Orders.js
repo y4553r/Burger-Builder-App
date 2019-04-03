@@ -15,11 +15,13 @@ class Orders extends Component {
 
   render() {
     let orders = this.props.orders.map(order => {
-      return <Order 
-      key={order.key}
-      ingredients={order.ingredients}
-      costumar={order.costumar}
-      price={order.price} />
+      if (order.costumar.userId === this.props.userId) {
+        return <Order
+          key={order.key}
+          ingredients={order.ingredients}
+          costumar={order.costumar}
+          price={order.price} />
+      }
     });
     if (this.props.displayingOrders) orders = <Spinner />
     return (
@@ -34,7 +36,8 @@ const mapStateToProps = state => {
   return {
     orders: state.order.orders,
     displayingOrders: state.order.displayingOrders,
-    token: state.auth.token
+    token: state.auth.token,
+    userId: state.auth.userId
   };
 };
 

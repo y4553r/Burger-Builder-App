@@ -15,7 +15,7 @@ const SideDrawer = props => {
             <div className={attachedClasses.join(' ')}>
                 <Logo height="10%" style={{height: "32px"}} />
                 <nav>
-                    <NavigationItems />
+                    <NavigationItems isAuth={props.isAuth} />
                 </nav>
             </div>
 	    </Aux>

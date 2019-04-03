@@ -7,6 +7,7 @@ import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import * as actions from '../../store/actions/index';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import { updateObject } from '../../shared/utility';
 
 class Auth extends Component {
   state = {
@@ -44,7 +45,7 @@ class Auth extends Component {
   };
 
   componentDidMount() {
-    if(!this.props.building && this.props.authRedirectPath!=='/') {
+    if (!this.props.building && this.props.authRedirectPath !== '/') {
       this.props.onSetAutoRedirectPath('/');
     }
   }
@@ -72,15 +73,13 @@ class Auth extends Component {
   }
 
   inputChangedHandler = (event, controlName) => {
-    const updatedControls = {
-      ...this.state.controls,
-      [controlName]: {
-        ...this.state.controls[controlName],
+    const updatedControls = updateObject(this.state.controls, {
+      [controlName]: updatedObject(this.state.controls[controlName], {
         value: event.target.value,
         valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
         touched: true
-      }
-    }
+      })
+    });
     this.setState({ controls: updatedControls });
   }
 
@@ -117,9 +116,9 @@ class Auth extends Component {
 
     let errorMessage = null;
     if (this.props.error) errorMessage = <p>{this.props.error.message}</p>;
-    
+
     let authRedirect = null;
-    if(this.props.token) {
+    if (this.props.token) {
       authRedirect = <Redirect to={this.props.authRedirectPath} />;
     }
 
@@ -155,7 +154,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
-		onSetAutoRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
+    onSetAutoRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
   };
 };
 

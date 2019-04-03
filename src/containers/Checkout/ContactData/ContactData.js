@@ -8,6 +8,7 @@ import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
 import axios from '../../../axios-orders';
+import { updateObject } from '../../../shared/utility';
 
 class ContactData extends Component {
   constructor(props) {
@@ -103,7 +104,7 @@ class ContactData extends Component {
   checkValidity(value, rules) {
     let isValid = true;
 
-    if(!rules) {
+    if (!rules) {
       return true;
     }
 
@@ -119,16 +120,20 @@ class ContactData extends Component {
   }
 
   inputChangedHandler = (event, el) => {
-    const updateValueElement = this.state.orderForm;
-    updateValueElement[el].value = event.target.value;
-    updateValueElement[el].valid = this.checkValidity(updateValueElement[el].value, updateValueElement[el].validation);
-    updateValueElement[el].shouldValidate = true;
+    const updateFormElement = updateObject(this.state.orderForm, {
+      value: event.target.value,
+      valid: this.checkValidity(event.target.value, this.state.orderForm[el].validation),
+      shouldValidate: true
+    });
+    const updatedOrderForm = updateObject(this.state.orderForm, {
+      [el]: updateFormElement
+    });
     
     let formIsValid = true;
-    for (let element in updateValueElement) {
-      formIsValid = updateValueElement[element].valid && formIsValid;
+    for (let element in updatedOrderForm) {
+      formIsValid = this.state.orderForm[element].valid && formIsValid;
     }
-    this.setState({ orderForme: updateValueElement, formIsValid: formIsValid });
+    this.setState({ orderForme: updatedOrderForm, formIsValid: formIsValid });
   }
 
   orderConfirmedHandler(event) {

@@ -22,6 +22,7 @@ class Orders extends Component {
           costumar={order.costumar}
           price={order.price} />
       }
+      return null;
     });
     if (this.props.displayingOrders) orders = <Spinner />
     return (
